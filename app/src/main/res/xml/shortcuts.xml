@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="call_center"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_call_24"
+        android:shortcutShortLabel="@string/call_center" tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.ACTION_DIAL"
+            android:targetPackage="com.example.krastaffapp"
+            android:targetClass="com.example.krastaffapp.CallerShortcut" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

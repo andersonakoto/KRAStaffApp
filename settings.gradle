@@ -1,0 +1,4 @@
+rootProject.name = "KRAStaffApp"
+include ':app'
+include ':app'
+include ':app'

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.krastaffapp">
+
+
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.KRAStaffApp">
+
+
+        <activity android:name=".ActivitySplashScreen"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL"/>
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.LoginActivity" />
+        </activity>
+
+        <activity android:name=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.MainActivity" />
+        </activity>
+
+        <activity android:name=".LaunchActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.LaunchActivity" />
+        </activity>
+
+        <activity android:name=".registration.OtpActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.registration.OtpActivity" />
+        </activity>
+
+        <activity android:name=".registration.SetPassActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.registration.SetPassActivity" />
+        </activity>
+
+        <activity android:name=".registration.StaffidActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.registration.StaffidActivity" />
+        </activity>
+
+        <activity android:name=".CallerShortcut">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.CallerShortcut"/>
+        </activity>
+
+        <activity android:name=".checkinout.CheckinoutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.checkinout.CheckinoutActivity"/>
+        </activity>
+
+        <activity android:name=".checkinout.LaptopManActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.checkinout.LaptopManActivity"/>
+        </activity>
+
+        <activity android:name=".checkinout.LaptopQRActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.checkinout.LaptopQRActivity"/>
+        </activity>
+
+
+        <activity android:name=".ui.embeddedapps.NHIFAppMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.checkinout.LaptopQRActivity"/>
+        </activity>
+
+        <activity android:name=".ui.embeddedapps.EquityAppMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.checkinout.LaptopQRActivity"/>
+        </activity>
+
+
+    </application>
+
+</manifest>
