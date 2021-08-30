@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.krastaffapp.CaptureActivity;
 import com.example.krastaffapp.R;
 
 public class CheckinoutActivity extends Activity {
@@ -27,6 +28,15 @@ public class CheckinoutActivity extends Activity {
 
         laptopqr.setOnClickListener(view -> {
             Intent intent2 = new Intent(CheckinoutActivity.this, LaptopQRActivity.class);
+            startActivity(intent2);
+//            this.finish();
+
+        });
+
+        Button checkinindv = findViewById(R.id.checkin_indv);
+
+        checkinindv.setOnClickListener(view -> {
+            Intent intent2 = new Intent(CheckinoutActivity.this, CaptureActivity.class);
             startActivity(intent2);
 //            this.finish();
 
