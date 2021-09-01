@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.example.krastaffapp.CaptureActivity;
+import com.example.krastaffapp.CheckoutActivity;
+import com.example.krastaffapp.CheckinActivity;
 import com.example.krastaffapp.R;
 
 public class CheckinoutActivity extends Activity {
@@ -36,7 +37,16 @@ public class CheckinoutActivity extends Activity {
         Button checkinindv = findViewById(R.id.checkin_indv);
 
         checkinindv.setOnClickListener(view -> {
-            Intent intent2 = new Intent(CheckinoutActivity.this, CaptureActivity.class);
+            Intent intent2 = new Intent(CheckinoutActivity.this, CheckinActivity.class);
+            startActivity(intent2);
+//            this.finish();
+
+        });
+
+        Button checkoutindv = findViewById(R.id.checkout_indv);
+
+        checkoutindv.setOnClickListener(view -> {
+            Intent intent2 = new Intent(CheckinoutActivity.this, CheckoutActivity.class);
             startActivity(intent2);
 //            this.finish();
 

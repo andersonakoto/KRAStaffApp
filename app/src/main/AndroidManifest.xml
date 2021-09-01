@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.krastaffapp">
 
 
@@ -7,6 +8,8 @@
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
 
     <application
@@ -15,7 +18,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KRAStaffApp">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.KRAStaffApp"
+        tools:targetApi="m">
 
 
         <activity android:name=".ActivitySplashScreen"
@@ -87,10 +92,16 @@
                 android:value="com.example.krastaffapp.checkinout.LaptopManActivity"/>
         </activity>
 
-        <activity android:name=".CaptureActivity">
+        <activity android:name=".CheckinActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.krastaffapp.CaptureActivity"/>
+                android:value="com.example.krastaffapp.CheckinActivity"/>
+        </activity>
+
+        <activity android:name=".CheckoutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.krastaffapp.CheckoutActivity"/>
         </activity>
 
         <activity android:name=".checkinout.LaptopQRActivity">

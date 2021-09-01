@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/staffNoView" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -39,13 +39,13 @@
         android:layout_marginBottom="55dp"
         android:background="#5A2F2F"
         android:src="@drawable/kra_icon"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/staffNameView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/kra_icon" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/staffNameView"
         android:layout_width="270dp"
         android:layout_height="30dp"
         android:layout_marginStart="70dp"
@@ -53,7 +53,7 @@
         android:layout_marginBottom="56dp"
         android:text="Staff Name"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/staffNoView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -73,18 +73,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/staffNoView"
         android:layout_width="270dp"
         android:layout_height="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginEnd="70dp"
         android:layout_marginBottom="47dp"
-        android:text="Staff ID No."
+        android:text="Staff No."
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/staffNameView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
