@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "78721250742",
+    "project_id": "kra-staff-app",
+    "storage_bucket": "kra-staff-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78721250742:android:416eb5caee6ca7fc70fd17",
+        "android_client_info": {
+          "package_name": "com.example.krastaffapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78721250742-ko4sc6du2fdji14krnu76coc448hegjs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGXeeRkFBxOlAu4MMjDr3Yrxha86NT9Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78721250742-ko4sc6du2fdji14krnu76coc448hegjs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

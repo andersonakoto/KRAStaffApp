@@ -18,19 +18,23 @@
         app:layout_constraintBottom_toTopOf="@+id/next_otp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+        android:layout_width="348dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="152dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="70dp"
         android:text="Your One Time PIN (OTP) will be sent via SMS and should be automatically detected"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/otp_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,15 +42,39 @@
         android:id="@+id/next_otp"
         android:layout_width="128dp"
         android:layout_height="64dp"
-        android:layout_marginBottom="263dp"
+        android:layout_marginBottom="104dp"
         android:text="Next"
         app:cornerRadius="20dp"
         app:icon="@drawable/ic_baseline_arrow_forward_ios_24"
         app:iconPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_resend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_resend"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="132dp"
+        android:text="Verify Number and Resend OTP"
+        android:textColor="@color/kra_red"
+        android:textSize="16sp"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/otp_view" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/resend_after"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_resend"
+        app:layout_constraintEnd_toEndOf="@+id/button_resend"
+        app:layout_constraintStart_toStartOf="@+id/button_resend"
+        app:layout_constraintTop_toTopOf="@+id/button_resend" />
 
     <!-- Linear progress indicator -->
 
