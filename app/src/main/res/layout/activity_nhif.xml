@@ -13,12 +13,12 @@
         android:layout_marginTop="74dp"
         android:layout_marginEnd="46dp"
         android:layout_marginBottom="60dp"
-        android:src="@drawable/nhif"
+        android:src="@mipmap/nhif"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/nhif" />
+        tools:src="@mipmap/nhif" />
 
     <EditText
         android:id="@+id/editTextTextPersonName3"

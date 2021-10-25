@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
             android.os.Process.killProcess(pid);*/
             Intent a = new Intent(Intent.ACTION_MAIN);
             a.addCategory(Intent.CATEGORY_HOME);
-            //a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(a);
-            /*finishAffinity();
             finish();
-            finishAndRemoveTask();*/
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+            finishAffinity();
+            finishAndRemoveTask();
             /*System.exit(0);
             onDestroy();*/
 //            progressDialog.dismiss();

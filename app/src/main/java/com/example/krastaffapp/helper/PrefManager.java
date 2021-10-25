@@ -29,6 +29,8 @@ public class PrefManager {
     private static final String KEY_STAFFTITLE = "staffTitle";
     private static final String KEY_STAFFNUMBER = "staffNumber";
     private static final String KEY_STAFFEMAIL = "staffEmail";
+    private static final String KEY_TOKEN = "token";
+
 
 
 
@@ -65,7 +67,7 @@ public class PrefManager {
 
     }
 
-    public void createLogin(String mobile, String staffname, String staffdept, String stafftitle, String staffnumber, String staffemail) {
+    public void createLogin(String mobile, String staffname, String staffdept, String stafftitle, String staffnumber, String staffemail, String token) {
 
         editor.putString(KEY_MOBILE, mobile);
         editor.putString(KEY_STAFFNAME, staffname);
@@ -73,6 +75,7 @@ public class PrefManager {
         editor.putString(KEY_STAFFTITLE, stafftitle);
         editor.putString(KEY_STAFFNUMBER, staffnumber);
         editor.putString(KEY_STAFFEMAIL, staffemail);
+        editor.putString(KEY_TOKEN, token);
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.commit();
     }
