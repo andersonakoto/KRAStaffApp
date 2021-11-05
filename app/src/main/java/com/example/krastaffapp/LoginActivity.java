@@ -1,5 +1,6 @@
 package com.example.krastaffapp;
 
+import static android.os.Build.VERSION_CODES.Q;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
@@ -84,42 +85,44 @@ public class LoginActivity extends AppCompatActivity implements
 
 
         BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)) {
-            case BiometricManager.BIOMETRIC_SUCCESS:
-                Executor executor = ContextCompat.getMainExecutor(this);
-                biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticationError(int errorCode,@NonNull CharSequence errString) {
-                        super.onAuthenticationError(errorCode, errString);
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
-                        String sno = pref.getString("KEY_STAFFNUMBER", null);
-                        EditText staffNo = findViewById(R.id.staffid_login);
-                        staffNo.setText(sno);
+        if (Build.VERSION.SDK_INT > Q){
+
+            switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL )) {
+                case BiometricManager.BIOMETRIC_SUCCESS:
+                    Executor executor = ContextCompat.getMainExecutor(this);
+                    biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                            super.onAuthenticationError(errorCode, errString);
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
+                            String sno = pref.getString("KEY_STAFFNUMBER", null);
+                            EditText staffNo = findViewById(R.id.staffid_login);
+                            staffNo.setText(sno);
 
 
-                        Toast.makeText(getApplicationContext(), "Type in your credentials to login.", Toast.LENGTH_SHORT).show();
-                    }
+                            Toast.makeText(getApplicationContext(), "Type in your credentials to login.", Toast.LENGTH_LONG).show();
+                        }
 
-                    @Override
-                    public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                        super.onAuthenticationSucceeded(result);
+                        @Override
+                        public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                            super.onAuthenticationSucceeded(result);
 
 
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
-                        String sno = pref.getString("uname", null);
-                        String sp = pref.getString("upass", null);
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
+                            String sno = pref.getString("uname", null);
+                            String sp = pref.getString("upass", null);
 
-                        EditText staffNo = findViewById(R.id.staffid_login);
-                        TextInputLayout staffP = findViewById(R.id.staffid_pass);
+                            EditText staffNo = findViewById(R.id.staffid_login);
+                            TextInputLayout staffP = findViewById(R.id.staffid_pass);
 
-                        byte[] bpass2 = sp.getBytes(Charsets.ISO_8859_1);
-                        byte[] bsno2 = sno.getBytes(Charsets.ISO_8859_1);
+                            byte[] bpass2 = sp.getBytes(Charsets.ISO_8859_1);
+                            byte[] bsno2 = sno.getBytes(Charsets.ISO_8859_1);
 
-                        String filename = "my_keyset.json";
-                        File dir = getApplicationContext().getFilesDir();
+                            String filename = "my_keyset.json";
+                            File dir = getApplicationContext().getFilesDir();
 
-                        File file = new File(dir, filename);
-                            if(file.exists()) {
+                            File file = new File(dir, filename);
+                            if (file.exists()) {
                                 try {
 
                                     DeterministicAeadConfig.register();
@@ -145,51 +148,210 @@ public class LoginActivity extends AppCompatActivity implements
 
                                     Log.d("KRA:", "DEBUG: " + daead + keysetHandle);
 
-                                    checkstaffinfo(staffreg,staffpass);
+                                    checkstaffinfo(staffreg, staffpass);
 
                                 } catch (GeneralSecurityException | IOException e) {
 
 
                                     e.printStackTrace();
                                 }
-                            }else if(!file.exists()) {
+                            } else if (!file.exists()) {
 
                                 Log.d("KRA:", "KEYFILE DOESN'T EXIST.");
 
                             }
-                    }
+                        }
 
-                    @Override
-                    public void onAuthenticationFailed() {
-                        super.onAuthenticationFailed();
-                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
+                        @Override
+                        public void onAuthenticationFailed() {
+                            super.onAuthenticationFailed();
+                            Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_LONG).show();
+                        }
+                    });
 
 
-                Log.d("KRA: ", "App can authenticate using biometrics.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Log.e("KRA: ", "No biometric features available on this device.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Log.e("KRA: ", "Biometric features are currently unavailable.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                // Prompts the user to create credentials that your app accepts.
-                final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
-                enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                        BIOMETRIC_STRONG | DEVICE_CREDENTIAL);
-                startActivityForResult(enrollIntent, 0);
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
-                break;
-            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
-                break;
+                    Log.d("KRA: ", "App can authenticate using biometrics.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "No biometric features available on this device.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric features are currently unavailable.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometrics Are Enrolled.", Toast.LENGTH_LONG).show();
+
+                    // Prompts the user to create credentials that your app accepts.
+                    final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
+                    enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                            BIOMETRIC_STRONG | DEVICE_CREDENTIAL);
+                    startActivityForResult(enrollIntent, 0);
+
+                    Log.e("KRA: ", "Biometric features are currently unavailable.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Security Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric ERROR_SECURITY_UPDATE_REQUIRED.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Supported.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric ERROR_UNSUPPORTED.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                    Toast.makeText(getApplicationContext(), "No Biometric Status Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric STATUS_UNKNOWN.");
+
+                    break;
+            }
+        }else {
+
+            switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG)) {
+                case BiometricManager.BIOMETRIC_SUCCESS:
+                    Executor executor = ContextCompat.getMainExecutor(this);
+                    biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                            super.onAuthenticationError(errorCode, errString);
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
+                            String sno = pref.getString("KEY_STAFFNUMBER", null);
+                            EditText staffNo = findViewById(R.id.staffid_login);
+                            staffNo.setText(sno);
+
+
+                            Toast.makeText(getApplicationContext(), "Type in your credentials to login.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                            super.onAuthenticationSucceeded(result);
+
+
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
+                            String sno = pref.getString("uname", null);
+                            String sp = pref.getString("upass", null);
+
+                            EditText staffNo = findViewById(R.id.staffid_login);
+                            TextInputLayout staffP = findViewById(R.id.staffid_pass);
+
+                            byte[] bpass2 = sp.getBytes(Charsets.ISO_8859_1);
+                            byte[] bsno2 = sno.getBytes(Charsets.ISO_8859_1);
+
+                            String filename = "my_keyset.json";
+                            File dir = getApplicationContext().getFilesDir();
+
+                            File file = new File(dir, filename);
+                            if (file.exists()) {
+                                try {
+
+                                    DeterministicAeadConfig.register();
+
+                                    KeysetHandle keysetHandle = CleartextKeysetHandle.read(
+                                            JsonKeysetReader.withFile(new File(dir, filename)));
+
+                                    Log.d("KRA:", "READING KEYFILE: " + file);
+
+                                    Log.d("KRA:", "KEYFILE: " + keysetHandle);
+
+                                    DeterministicAead daead = keysetHandle.getPrimitive(DeterministicAead.class);
+
+                                    byte[] decrypted = daead.decryptDeterministically(bpass2, bsno2);
+
+                                    String dpass = new String(decrypted, Charsets.ISO_8859_1);
+
+                                    staffNo.setText(sno);
+                                    Objects.requireNonNull(staffP.getEditText()).setText(dpass);
+
+                                    String staffreg = inputstaffno.getText().toString().trim();
+                                    String staffpass = Objects.requireNonNull(inputpass.getEditText()).getText().toString().trim();
+
+                                    Log.d("KRA:", "DEBUG: " + daead + keysetHandle);
+
+                                    checkstaffinfo(staffreg, staffpass);
+
+                                } catch (GeneralSecurityException | IOException e) {
+
+
+                                    e.printStackTrace();
+                                }
+                            } else if (!file.exists()) {
+
+                                Log.d("KRA:", "KEYFILE DOESN'T EXIST.");
+
+                            }
+                        }
+
+                        @Override
+                        public void onAuthenticationFailed() {
+                            super.onAuthenticationFailed();
+                            Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+
+                    Log.d("KRA: ", "App can authenticate using biometrics.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "No biometric features available on this device.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric features are currently unavailable.");
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometrics Are Enrolled.", Toast.LENGTH_LONG).show();
+
+                    // Prompts the user to create credentials that your app accepts.
+                    final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
+                    enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, BIOMETRIC_STRONG);
+                    startActivityForResult(enrollIntent, 0);
+
+                    Log.e("KRA: ", "Biometric features are currently unavailable.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Security Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric ERROR_SECURITY_UPDATE_REQUIRED.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+
+                    Toast.makeText(getApplicationContext(), "No Biometric Hardware Supported.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric ERROR_UNSUPPORTED.");
+
+                    break;
+                case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                    Toast.makeText(getApplicationContext(), "No Biometric Status Available.", Toast.LENGTH_LONG).show();
+
+                    Log.e("KRA: ", "Biometric STATUS_UNKNOWN.");
+
+                    break;
+            }
+
         }
 
         BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
@@ -200,7 +362,11 @@ public class LoginActivity extends AppCompatActivity implements
 
 
         if (pref.isLoggedIn()) {
-            biometricPrompt.authenticate(promptInfo);
+
+            if (biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
+
+                biometricPrompt.authenticate(promptInfo);
+            }
 
         } else if (!pref.isLoggedIn()){
 
