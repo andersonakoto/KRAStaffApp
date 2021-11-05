@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.example.krastaffapp.R;
 
-public class EquityAppMain extends Activity {
+public class IsupportAppMain extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

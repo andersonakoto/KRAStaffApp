@@ -3,6 +3,7 @@ package com.example.krastaffapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,13 +16,23 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
 import com.example.krastaffapp.databinding.ActivityMainBinding;
+import com.example.krastaffapp.helper.AppController;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +80,26 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         // Get new FCM registration token
-                        String token = task.getResult();
+                        String fcmToken = task.getResult();
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", MODE_PRIVATE);
+                        String staffPhone = pref.getString("KEY_MOBILE", null);
+
+
+                        updateFCMtoken(fcmToken, staffPhone);
+
+                        SharedPreferences ui = getSharedPreferences("UserInfo", MODE_PRIVATE);
+                        SharedPreferences.Editor edUi = ui.edit();
+
+                        edUi.putString("fcmToken", fcmToken);
+
+                        edUi.apply();
+
 
                         // Log and toast
-                        String msg = getString(R.string.msg_token_fmt, token);
+                        String msg = getString(R.string.msg_token_fmt, fcmToken);
                         Log.d("KRA:FCM:Message::", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
@@ -108,6 +133,68 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void updateFCMtoken(String fcmToken, String staffPhone) {
+
+        if (!fcmToken.isEmpty()) {
+
+            StringRequest strReq = new StringRequest(
+                    Request.Method.POST,
+                    "http://10.151.1.114/query5.php", response -> {
+                Log.d("KRA:", "FCMToken-RESPONSE:" + response);
+
+                try {
+                    JSONObject responseObj = new JSONObject(response);
+
+                    boolean error = responseObj.getBoolean("error");
+                    String message = responseObj.getString("message");
+
+                    if (!error) {
+
+//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        Log.d("KRA:", "FCM TOKEN UPDATED: " + fcmToken +"\n "+ staffPhone);
+
+
+                    } else {
+                        Log.e("KRA:", "FCM TOKEN UPDATED ERROR: " + message);
+
+                    }
+
+
+                } catch (JSONException e) {
+                    Log.e("KRA:", "FCM TOKEN UPDATE Error: " + e.getMessage());
+                }
+
+            }, error -> {
+                Log.e("KRA:", "FCM TOKEN UPDATE Error: " + error.getMessage());
+
+            }) {
+
+                /**
+                 * Passing user parameters to the SQl server
+                 */
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("staffAppDevID", fcmToken);
+                    params.put("staffPhone", staffPhone);
+
+                    Log.d("KRA:", "FCM PARAM: " + params.toString());
+
+                    return params;
+                }
+
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(strReq);
+
+
+        } else {
+            Log.d("KRA:", "FCM TOKEN EMPTY: " + fcmToken);
+
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KRA Staff App</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dashboard">Me</string>
     <string name="title_notifications">Notifications</string>
     <string name="call_center">Dial Call Center</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>

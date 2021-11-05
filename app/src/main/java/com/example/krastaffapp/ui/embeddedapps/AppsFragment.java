@@ -1,6 +1,5 @@
 package com.example.krastaffapp.ui.embeddedapps;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,21 +23,21 @@ public class AppsFragment extends Fragment {
         binding = FragmentAppsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        Button equity_app = root.findViewById(R.id.equity_app);
+        Button isupport_app = root.findViewById(R.id.isupport_app);
 
-        equity_app.setOnClickListener(view -> {
-            Intent equityapp = new Intent(getActivity(), EquityAppMain.class);
-            startActivity(equityapp);
-//            this.finish();
+        isupport_app.setOnClickListener(view -> {
+//            Intent equityapp = new Intent(getActivity(), EquityAppMain.class);
+//            startActivity(equityapp);
+////            this.finish();
 
         });
 
-        Button nhif_app = root.findViewById(R.id.nhif_app);
+        Button medismart_app = root.findViewById(R.id.medismart_app);
 
-        nhif_app.setOnClickListener(view -> {
-            Intent nhifapp = new Intent(getActivity(), NHIFAppMain.class);
-            startActivity(nhifapp);
-//            this.finish();
+        medismart_app.setOnClickListener(view -> {
+//            Intent nhifapp = new Intent(getActivity(), NHIFAppMain.class);
+//            startActivity(nhifapp);
+////            this.finish();
 
         });
 

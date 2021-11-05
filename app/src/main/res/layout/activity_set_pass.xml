@@ -72,6 +72,7 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:clickable="true"
+            android:longClickable="false"
             android:focusableInTouchMode="true"
             android:hint="Retype password"
             android:inputType="textPassword"

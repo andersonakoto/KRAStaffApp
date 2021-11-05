@@ -48,7 +48,7 @@ public class AppSignatureHashHelper extends ContextWrapper {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Package not found", e);
+            Log.e("KRA: ", "Package not found", e);
         }
         return appSignaturesHashs;
     }
@@ -70,7 +70,7 @@ public class AppSignatureHashHelper extends ContextWrapper {
 
             return base64Hash;
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "No Such Algorithm Exception", e);
+            Log.e("KRA: ", "No Such Algorithm Exception", e);
         }
         return null;
     }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.example.krastaffapp.R;
 
 
-public class NHIFAppMain extends Activity {
+public class MedismartAppMain extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

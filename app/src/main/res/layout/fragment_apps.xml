@@ -27,10 +27,10 @@
             app:layout_constraintHorizontal_bias="0.197"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/equitybnk" />
+            app:srcCompat="@drawable/isupport" />
 
         <Button
-            android:id="@+id/equity_app"
+            android:id="@+id/isupport_app"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="116dp"
             android:layout_height="116dp"
@@ -48,10 +48,10 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@mipmap/nhif" />
+            app:srcCompat="@drawable/medismart" />
 
         <Button
-            android:id="@+id/nhif_app"
+            android:id="@+id/medismart_app"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="116dp"
             android:layout_height="116dp"

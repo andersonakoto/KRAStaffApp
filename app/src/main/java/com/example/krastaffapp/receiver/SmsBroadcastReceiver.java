@@ -18,7 +18,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         this.otpReceiveInterface = otpReceiveInterface;
     }
     @Override public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: ");
+        Log.d("KRA: ", "onReceive: ");
         if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
             Bundle extras = intent.getExtras();
             assert extras != null;
@@ -28,7 +28,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 case CommonStatusCodes.SUCCESS:
                     // Get SMS message contents'
                     String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
-                    Log.d(TAG, "onReceive: failure "+message);
+                    Log.d("KRA: ", "onReceive: failure " + message);
                     if (otpReceiveInterface != null) {
                         assert message != null;
                         String otp = getVerificationCode(message);
@@ -37,7 +37,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case CommonStatusCodes.TIMEOUT:
                     // Waiting for SMS timed out (5 minutes)
-                    Log.d(TAG, "onReceive: failure");
+                    Log.d("KRA: ", "onReceive: failure");
                     if (otpReceiveInterface != null) {
                         otpReceiveInterface.onOtpTimeout();
                     }

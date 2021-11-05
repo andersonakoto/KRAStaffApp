@@ -14,34 +14,26 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.room.Room;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.example.krastaffapp.ui.notifications.NotificationsDB;
+import com.example.krastaffapp.ui.notifications.NotificationsList;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.example.krastaffapp.MainActivity;
-import com.example.krastaffapp.MyWorker;
-import com.example.krastaffapp.R;
-
-import java.util.Objects;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
-
-    private static final String TAG = "MyFirebaseMsgService";
-
-
-
-
+    public static NotificationsDB notificationsDB;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        sendNotification(Objects.requireNonNull(remoteMessage.getNotification()).getBody(), remoteMessage.getNotification().getTitle());
-
-
+        LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(this);
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
@@ -51,16 +43,82 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d("KRA:", "Message data payload: " + remoteMessage.getData());
 
-            // For long-running tasks (10 seconds or more) use WorkManager.
+            notificationsDB = Room.databaseBuilder(getApplicationContext(),NotificationsDB.class,"notificationsDB")            .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build();
+
+            String nId = remoteMessage.getData().get("tag");
+            String nTitle = remoteMessage.getData().get("title");
+            String nBody = remoteMessage.getData().get("msg");
+            String nTime = remoteMessage.getData().get("time");
+
+            String unread = "unread";
+
+            NotificationsList notificationsList =new NotificationsList();
+            assert nId != null;
+            notificationsList.setId(nId);
+            notificationsList.setNtitle(nTitle);
+            notificationsList.setNmessage(nBody);
+            notificationsList.setNtime(nTime);
+            notificationsList.setNread(unread);
+
+
+            Intent intent2 = new Intent("custom-listener");
+            broadcaster.sendBroadcast(intent2);
+
+            MyFirebaseMessagingService.notificationsDB.notificationsDAO().addData(notificationsList);
+
+            Log.d("KRA:", "Message saved to DB: " + "\n" + nId + "\n" + nTitle + "\n" + nBody + "\n" + nTime);
+
             scheduleJob();
 
         }
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d("KRA:", "Message Notification Body: " + remoteMessage.getNotification().getBody());
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Context context = getApplicationContext();
+
+
+        String channelId = "krastaffapp-01";
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.drawable.kra_icon)
+                        .setContentText(remoteMessage.getData().get("msg"))
+                        .setContentTitle(remoteMessage.getData().get("title"))
+                        .setAutoCancel(false)
+                        .setSound(defaultSoundUri)
+                        .setChannelId(channelId)
+                        .setVibrate(new long[]{0, 400, 100, 400})
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setSortKey("e")
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            @SuppressLint("WrongConstant") NotificationChannel notificationChannel =
+                    new NotificationChannel(channelId, "KRAStaffApp", NotificationManager.IMPORTANCE_HIGH);
+            // Configure the notification channel.
+            notificationChannel.setDescription("Staff Notifications");
+            notificationChannel.enableVibration(true);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 400, 100, 400});
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(notificationChannel);
+
 
         }
+
+        assert notificationManager != null;
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
 
     }
@@ -73,7 +131,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(@NonNull String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+        Log.d("KRA: ", "Refreshed token: " + token);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
@@ -97,7 +155,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Handle time allotted to BroadcastReceivers.
      */
     private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
+        Log.d("KRA: ", "Short lived task is done.");
     }
 
     /**
@@ -114,52 +172,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     private void sendNotification(String messageBody, String title) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        Context context = getApplicationContext();
-
-        String GROUP_KEY_OUTAGES = "22";
-
-
-
-        String channelId = "01";
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.kra_icon)
-                        .setContentText(messageBody)
-                        .setContentTitle(title)
-                        .setAutoCancel(false)
-                        .setSound(defaultSoundUri)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        .setGroup(GROUP_KEY_OUTAGES)
-                        .setSortKey("e")
-                        .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-
-        String NOTIFICATION_CHANNEL_ID = "01";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "PowerOutageNotifications", NotificationManager.IMPORTANCE_MAX);
-            // Configure the notification channel.
-            notificationChannel.setDescription("Staff Notifications");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{250, 250, 250});
-            notificationChannel.enableVibration(true);
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(notificationChannel);
-
-
-        }
-
-        assert notificationManager != null;
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

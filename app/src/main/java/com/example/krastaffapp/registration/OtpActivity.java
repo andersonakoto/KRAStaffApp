@@ -1,9 +1,6 @@
 package com.example.krastaffapp.registration;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,10 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.example.krastaffapp.AppSignatureHashHelper;
-import com.example.krastaffapp.MainActivity;
 import com.example.krastaffapp.R;
 import com.example.krastaffapp.helper.AppController;
 import com.example.krastaffapp.helper.PrefManager;
@@ -35,8 +32,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class OtpActivity extends Activity implements OTPInterface, View.OnClickListener {
+public class OtpActivity extends AppCompatActivity implements OTPInterface, View.OnClickListener {
 
     private TextView resend_after;
     private Button btn_resend;
@@ -48,6 +46,7 @@ public class OtpActivity extends Activity implements OTPInterface, View.OnClickL
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_otp);
 
         startTimer();
@@ -265,6 +264,25 @@ public class OtpActivity extends Activity implements OTPInterface, View.OnClickL
 
     @Override
     public void onClick(View view) {
+
+    }
+    @Override
+    public void onBackPressed() {
+
+            /*pref.clearSession();
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);*/
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        finish();
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+        finishAffinity();
+        finishAndRemoveTask();
+            /*System.exit(0);
+            onDestroy();*/
+//            progressDialog.dismiss();
+        super.onBackPressed();
 
     }
 }
