@@ -14,9 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.krastaffapp.LoginActivity;
 import com.example.krastaffapp.R;
-import com.example.krastaffapp.helper.AppController;
 import com.example.krastaffapp.helper.PrefManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.internal.ConnectionCallbacks;
@@ -110,8 +112,18 @@ public class StaffidActivity extends AppCompatActivity implements
 
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
-                    } else {
+                    } else if(message.equals("You are already registered onto the App. Go back and tap 'Login' to continue.")) {
 
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        this.finish();
+                        pDialog.dismiss();
+
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+                    }
+                    else{
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                         pDialog.dismiss();
 
@@ -147,10 +159,10 @@ public class StaffidActivity extends AppCompatActivity implements
                 }
 
             };
+            RequestQueue requestQueue = Volley.newRequestQueue(StaffidActivity.this);
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(strReq);
-
+            // Adding the StringRequest object into requestQueue.
+            requestQueue.add(strReq);
 
         } else {
             Toast.makeText(getApplicationContext(), "Please enter a valid KRA Staff Number.", Toast.LENGTH_LONG).show();

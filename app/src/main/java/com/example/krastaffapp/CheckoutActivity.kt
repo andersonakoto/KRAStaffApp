@@ -31,7 +31,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import kotlinx.android.synthetic.main.activity_checkout_indv.*
+//import kotlinx.android.synthetic.main.activity_checkout_indv.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -203,7 +203,7 @@ class CheckoutActivity : AppCompatActivity(){
         val cameraSelector: CameraSelector = CameraSelector.Builder()
             .requireLensFacing(CameraSelector.LENS_FACING_BACK)
             .build()
-        preview.setSurfaceProvider(previewView.surfaceProvider)
+//        preview.setSurfaceProvider(previewView.surfaceProvider)
 
         cameraProvider.bindToLifecycle(
             this as LifecycleOwner,

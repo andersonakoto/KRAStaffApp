@@ -17,9 +17,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.krastaffapp.R;
-import com.example.krastaffapp.helper.AppController;
 import com.example.krastaffapp.helper.PrefManager;
 import com.example.krastaffapp.interfaces.OTPInterface;
 import com.example.krastaffapp.receiver.SmsBroadcastReceiver;
@@ -181,8 +182,11 @@ public class OtpActivity extends AppCompatActivity implements OTPInterface, View
 
         };
 
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq);
+        RequestQueue requestQueue = Volley.newRequestQueue(OtpActivity.this);
+
+        // Adding the StringRequest object into requestQueue.
+        requestQueue.add(strReq);
+
 
     }
 

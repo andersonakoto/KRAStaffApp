@@ -11,20 +11,45 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.krastaffapp.R;
 import com.example.krastaffapp.databinding.FragmentNotificationsBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsFragment extends Fragment {
+
+    ViewPager viewPager;
+    LinearLayout sliderDotspanel;
+    private int dotscount;
+    private ImageView[] dots;
+
+    RequestQueue rq;
+    List<SliderUtils> sliderImg;
+    ViewPagerAdapter viewPagerAdapter;
+
+    String request_url = "http://10.151.1.114/imgfetch.php";
 
 
     private FragmentNotificationsBinding binding;
@@ -49,9 +74,106 @@ public class NotificationsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
+        rq = CustomVolleyRequest.getInstance(context).getRequestQueue();
+
+        sliderImg = new ArrayList<>();
+
+        viewPager = root.findViewById(R.id.viewPager);
+
+        sliderDotspanel = root.findViewById(R.id.SliderDots);
+
+        sendRequest();
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                for(int i = 0; i< dotscount; i++){
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.nonactive_dot));
+                }
+
+                dots[position].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         getData();
 
         return root;
+    }
+
+    Context context;
+    BroadcastReceiver br;
+
+
+    public void sendRequest(){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET, request_url, null,
+                new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                for(int i = 0; i < response.length(); i++){
+
+                    SliderUtils sliderUtils = new SliderUtils();
+
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        sliderUtils.setSliderImageUrl(jsonObject.getString("imgUrl"));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    sliderImg.add(sliderUtils);
+
+                }
+
+                viewPagerAdapter = new ViewPagerAdapter(sliderImg, getContext());
+
+                viewPager.setAdapter(viewPagerAdapter);
+
+                dotscount = viewPagerAdapter.getCount();
+                dots = new ImageView[dotscount];
+
+                for(int i = 0; i < dotscount; i++){
+
+                    dots[i] = new ImageView(getContext());
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.nonactive_dot));
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    params.setMargins(8, 0, 8, 0);
+
+                    sliderDotspanel.addView(dots[i], params);
+
+                }
+
+                dots[0].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        CustomVolleyRequest.getInstance(context).addToRequestQueue(jsonArrayRequest);
+
     }
 
     @Override
@@ -91,8 +213,6 @@ public class NotificationsFragment extends Fragment {
     }
 
 
-    Context context;
-    BroadcastReceiver br;
 
 
     @Override

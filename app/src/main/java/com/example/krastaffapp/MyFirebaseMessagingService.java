@@ -144,9 +144,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Schedule async work using WorkManager.
      */
     private void scheduleJob() {
+
         // [START dispatch_job]
-        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
-                .build();
+        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class).build();
         WorkManager.getInstance().beginWith(work).enqueue();
         // [END dispatch_job]
     }

@@ -13,10 +13,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.krastaffapp.LoginActivity;
 import com.example.krastaffapp.R;
-import com.example.krastaffapp.helper.AppController;
 import com.example.krastaffapp.helper.PrefManager;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -145,9 +146,11 @@ public class SetPassActivity extends AppCompatActivity {
                     }
 
                 };
+                RequestQueue requestQueue = Volley.newRequestQueue(SetPassActivity.this);
 
-                // Adding request to request queue
-                AppController.getInstance().addToRequestQueue(strReq);
+                // Adding the StringRequest object into requestQueue.
+                requestQueue.add(strReq);
+
 
             } else {
 

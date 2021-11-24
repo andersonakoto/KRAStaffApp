@@ -24,8 +24,9 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.example.krastaffapp.helper.AppController;
+import com.android.volley.toolbox.Volley;
 import com.example.krastaffapp.helper.PrefManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.internal.ConnectionCallbacks;
@@ -594,8 +595,10 @@ public class LoginActivity extends AppCompatActivity implements
 
             };
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(strReq);
+            RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
+
+            // Adding the StringRequest object into requestQueue.
+            requestQueue.add(strReq);
 
 
         } else {

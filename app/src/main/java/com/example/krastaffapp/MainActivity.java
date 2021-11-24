@@ -17,9 +17,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.krastaffapp.databinding.ActivityMainBinding;
-import com.example.krastaffapp.helper.AppController;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -187,9 +188,10 @@ public class MainActivity extends AppCompatActivity {
 
             };
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(strReq);
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
+            // Adding the StringRequest object into requestQueue.
+            requestQueue.add(strReq);
 
         } else {
             Log.d("KRA:", "FCM TOKEN EMPTY: " + fcmToken);
