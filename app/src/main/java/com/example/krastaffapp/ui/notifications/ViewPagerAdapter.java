@@ -2,10 +2,11 @@ package com.example.krastaffapp.ui.notifications;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -13,19 +14,20 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.example.krastaffapp.R;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerFamily;
 
 import java.util.List;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
-    private Context context;
-    private LayoutInflater layoutInflater;
-    private List<SliderUtils> sliderImg;
-    private ImageLoader imageLoader;
+    private final Context context;
+    private final List<SliderUtils> sliderImg, sliderName;
 
 
-    public ViewPagerAdapter(List sliderImg,Context context) {
+    public ViewPagerAdapter(List sliderImg, List sliderName,Context context) {
         this.sliderImg = sliderImg;
+        this.sliderName = sliderName;
         this.context = context;
     }
 
@@ -44,15 +46,24 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
 
 
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.imageholder, null);
 
         SliderUtils utils = sliderImg.get(position);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.imgview);
+        ShapeableImageView imageView = (ShapeableImageView) view.findViewById(R.id.imgview);
 
-        imageLoader = CustomVolleyRequest.getInstance(context).getImageLoader();
+        TextView imageName = (TextView) view.findViewById(R.id.imgTitle);
+
+        imageView.setShapeAppearanceModel(imageView.getShapeAppearanceModel()
+        .toBuilder()
+        .setAllCorners(CornerFamily.ROUNDED, 15)
+        .build());
+        ImageLoader imageLoader = CustomVolleyRequest.getInstance(context).getImageLoader();
         imageLoader.get(utils.getSliderImageUrl(), ImageLoader.getImageListener(imageView, R.drawable.kra_icon, android.R.drawable.ic_dialog_alert));
+
+        imageName.setText(utils.getSliderName());
+        Log.d("KRA:IMG", utils.getSliderName());
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +86,8 @@ public class ViewPagerAdapter extends PagerAdapter {
         return view;
 
     }
+
+
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {

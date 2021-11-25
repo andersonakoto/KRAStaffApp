@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,7 +46,7 @@ public class NotificationsFragment extends Fragment {
     private ImageView[] dots;
 
     RequestQueue rq;
-    List<SliderUtils> sliderImg;
+    List<SliderUtils> sliderImg, sliderName;
     ViewPagerAdapter viewPagerAdapter;
 
     String request_url = "http://10.151.1.114/imgfetch.php";
@@ -56,6 +56,7 @@ public class NotificationsFragment extends Fragment {
     public static NotificationsDB notificationsDB;
 
     public RecyclerView recyclerView;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,10 +78,11 @@ public class NotificationsFragment extends Fragment {
         rq = CustomVolleyRequest.getInstance(context).getRequestQueue();
 
         sliderImg = new ArrayList<>();
+        sliderName = new ArrayList<>();
 
         viewPager = root.findViewById(R.id.viewPager);
 
-        sliderDotspanel = root.findViewById(R.id.SliderDots);
+//        sliderDotspanel = root.findViewById(R.id.SliderDots);
 
         sendRequest();
 
@@ -94,11 +96,11 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
 
-                for(int i = 0; i< dotscount; i++){
-                    dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.nonactive_dot));
-                }
-
-                dots[position].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
+//                for(int i = 0; i< dotscount; i++){
+//                    dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.nonactive_dot));
+//                }
+//
+//                dots[position].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
 
             }
 
@@ -114,7 +116,6 @@ public class NotificationsFragment extends Fragment {
     }
 
     Context context;
-    BroadcastReceiver br;
 
 
     public void sendRequest(){
@@ -133,6 +134,7 @@ public class NotificationsFragment extends Fragment {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         sliderUtils.setSliderImageUrl(jsonObject.getString("imgUrl"));
+                        sliderUtils.setSliderName(jsonObject.getString("imgName"));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -140,31 +142,19 @@ public class NotificationsFragment extends Fragment {
 
                     sliderImg.add(sliderUtils);
 
+
                 }
 
-                viewPagerAdapter = new ViewPagerAdapter(sliderImg, getContext());
+                viewPagerAdapter = new ViewPagerAdapter(sliderImg, sliderName, context);
 
                 viewPager.setAdapter(viewPagerAdapter);
 
-                dotscount = viewPagerAdapter.getCount();
-                dots = new ImageView[dotscount];
+                startAutoSlider(viewPagerAdapter.getCount());
 
-                for(int i = 0; i < dotscount; i++){
 
-                    dots[i] = new ImageView(getContext());
-                    dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.nonactive_dot));
-
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    params.setMargins(8, 0, 8, 0);
-
-                    sliderDotspanel.addView(dots[i], params);
-
-                }
-
-                dots[0].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
 
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -175,7 +165,20 @@ public class NotificationsFragment extends Fragment {
         CustomVolleyRequest.getInstance(context).addToRequestQueue(jsonArrayRequest);
 
     }
+    private Runnable runnable = null;
+    private final Handler handler = new Handler();
 
+    private void startAutoSlider(final int count) {
+
+        runnable = () -> {
+            int pos = viewPager.getCurrentItem();
+            pos = pos + 1;
+            if (pos >= count) pos = 0;
+            viewPager.setCurrentItem(pos);
+            handler.postDelayed(runnable, 3000);
+        };
+        handler.postDelayed(runnable, 3000);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -247,7 +250,7 @@ public class NotificationsFragment extends Fragment {
 
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
-            Log.d("receiver", "Got message: " + message);
+            Log.d("KRA:Receiver", "Got message: " + message);
         }
     };
 
