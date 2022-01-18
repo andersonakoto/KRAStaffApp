@@ -134,7 +134,7 @@ public class NotificationsFragment extends Fragment {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         sliderUtils.setSliderImageUrl(jsonObject.getString("imgUrl"));
-                        sliderUtils.setSliderName(jsonObject.getString("imgName"));
+                        sliderUtils.setSliderName(jsonObject.getString("imgDesc"));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
